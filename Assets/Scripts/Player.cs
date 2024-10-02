@@ -7,12 +7,18 @@ public class Player : MonoBehaviour
     [SerializeField]
     public float moveSpeed = 5;
 
-
-    private bool isShooting;
+    // Components
     private Rigidbody2D body;
     private Animator animator;
     private SpriteRenderer sprRenderer;
-    // Start is called before the first frame update
+
+    // Priavte state stuff
+    private bool triggering = false;
+    private Weapon currentWeapon = null;
+
+    // Accessor
+    public bool Triggering { get => triggering; }
+
     void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -27,16 +33,18 @@ public class Player : MonoBehaviour
         
         float hAxis = Input.GetAxisRaw("Horizontal");
         float vAxis = Input.GetAxisRaw("Vertical");
-        isShooting = Input.GetAxisRaw("Fire1") > 0;
+        triggering = Input.GetAxisRaw("Fire1") > 0;
+
+        /// Walking judge
+        bool isWalking = currentWeapon.Shooting;
 
         var direction = new Vector2(hAxis, vAxis);
-        body.velocity = moveSpeed * (isShooting ? 0.5f : 1) * direction;
+        body.velocity = moveSpeed * (isWalking ? 0.5f : 1) * direction;
 
         /// Animation Control
-        
         if(hAxis != 0 || vAxis != 0)
         {
-            if (isShooting) animator.Play("PlayerWalk");
+            if (isWalking) animator.Play("PlayerWalk");
             else animator.Play("PlayerRun");
         }
         else
@@ -50,5 +58,11 @@ public class Player : MonoBehaviour
         {
             sprRenderer.flipX = hAxis < 0;
         }
+    }
+
+    public void RegisterWeapon(Weapon weapon) {
+        currentWeapon = weapon;
+
+        Debug.Log("Weapon registered.");
     }
 }

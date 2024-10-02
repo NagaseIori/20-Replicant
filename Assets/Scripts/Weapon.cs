@@ -10,10 +10,25 @@ public class Weapon : MonoBehaviour
     private bool reloading = false;
     public float timeToReload = 2;  // in seconds
 
+    private Player player;
+
+    public bool Reloading {
+        get => reloading;
+    }
+    public bool Shooting {
+        get => !reloading && player.Triggering;
+    }
+
     void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        // Get parent player.
+        player = transform.parent.GetComponent<Player>();
+
+        // Register self to player.
+        player.RegisterWeapon(this);
     }
 
     void ReloadStart() {
