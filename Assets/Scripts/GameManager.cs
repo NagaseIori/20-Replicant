@@ -8,9 +8,9 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    private GameManager instance;
+    private static GameManager instance;
 
-    public GameManager Instance
+    public static GameManager Instance
     {
         get
         {
@@ -51,5 +51,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// Utils Functions
     
+    public static Vector2 GetMouseWorldPosition() {
+        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
+    public static Vector2 GetMouseLocalPosition(Transform trans)
+    {
+        var worldPos = GetMouseWorldPosition();
+        var worldPos3 = new Vector3(worldPos.x, worldPos.y, trans.position.z);
+        return trans.InverseTransformPoint(worldPos3);
+    }
 }

@@ -23,9 +23,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /// Handle Input
+        
         float hAxis = Input.GetAxisRaw("Horizontal");
         float vAxis = Input.GetAxisRaw("Vertical");
-        isShooting = Input.GetKey(KeyCode.Space);
+        isShooting = Input.GetAxisRaw("Fire1") > 0;
 
         var direction = new Vector2(hAxis, vAxis);
         body.velocity = moveSpeed * (isShooting ? 0.5f : 1) * direction;
