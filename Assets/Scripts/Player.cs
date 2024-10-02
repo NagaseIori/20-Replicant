@@ -25,9 +25,10 @@ public class Player : MonoBehaviour
     {
         float hAxis = Input.GetAxisRaw("Horizontal");
         float vAxis = Input.GetAxisRaw("Vertical");
+        isShooting = Input.GetKey(KeyCode.Space);
 
         var direction = new Vector2(hAxis, vAxis);
-        body.velocity = moveSpeed * direction;
+        body.velocity = moveSpeed * (isShooting ? 0.5f : 1) * direction;
 
         /// Animation Control
         
