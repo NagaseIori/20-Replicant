@@ -12,9 +12,13 @@ public class Player : MonoBehaviour
     private Animator animator;
     private SpriteRenderer sprRenderer;
 
-    // Priavte state stuff
+    // Player basic data
+    private readonly int healthMax = 4;
+
+    // Player current states
     private bool triggering = false;
     private Weapon currentWeapon = null;
+    private int healthPoint;
 
     // Accessor
     public bool Triggering { get => triggering; }
@@ -24,24 +28,29 @@ public class Player : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         sprRenderer = GetComponent<SpriteRenderer>();
+
+        // Init player's states
+        healthPoint = healthMax;
     }
 
     // Update is called once per frame
     void Update()
     {
-        /// Handle Input
+        // Handle Input
         
         float hAxis = Input.GetAxisRaw("Horizontal");
         float vAxis = Input.GetAxisRaw("Vertical");
         triggering = Input.GetAxisRaw("Fire1") > 0;
 
-        /// Walking judge
+        // Walking judge
+
         bool isWalking = currentWeapon.Shooting;
 
         var direction = new Vector2(hAxis, vAxis);
         body.velocity = moveSpeed * (isWalking ? 0.5f : 1) * direction;
 
-        /// Animation Control
+        // Animation Control
+        
         if(hAxis != 0 || vAxis != 0)
         {
             if (isWalking) animator.Play("PlayerWalk");
@@ -52,7 +61,7 @@ public class Player : MonoBehaviour
             animator.Play("PlayerIdle");
         }
 
-        /// Sprite Flip Control
+        // Sprite Flip Control
         
         if(hAxis != 0)
         {
