@@ -13,12 +13,12 @@ public class Player : MonoBehaviour
     private SpriteRenderer sprRenderer;
 
     // Player basic data
-    private readonly int healthMax = 4;
+    protected readonly int healthMax = 4;
 
     // Player current states
-    private bool triggering = false;
-    private Weapon currentWeapon = null;
-    private int healthPoint;
+    protected bool triggering = false;
+    protected Weapon currentWeapon = null;
+    protected int healthPoint;
 
     // Accessor
     public bool Triggering { get => triggering; }

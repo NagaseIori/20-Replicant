@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -8,23 +9,30 @@ public class Weapon : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator animator;
 
-    private bool reloading = false;
+    protected bool reloading = false;
 
     // Parent player
-    private Player player;
+    protected Player player;
+    // Muzzle maker
+    protected MuzzleMarker muzzleMarker;
 
     // Weapon basic data
-    private readonly double rateOfFire = 0.2;       // in seconds
-    private readonly double timeToReload = 2;       // in seconds
-    private readonly int magazineSize = 10;
-    private readonly double bulletVelocity = 1;     // ups
-    private readonly double bulletDamage = 20;
-    private readonly double bulletScale = 1;
+    public double rateOfFire = 0.2;         // in seconds
+    public double timeToReload = 2;         // in seconds
+    public int magazineSize = 10;   
+    public double bulletSpeed = 20;       // ups
+    public double bulletDamage = 20;    
+    public double bulletSize = 1;        // in px
+    public double bulletTTL = 1;            // in seconds
     
     // Weapon states
-    private int ammoCount;
-    private double reloadTimer;
-    private double fireCDTimer;
+    protected int ammoCount;
+    protected double reloadTimer;
+    protected double fireCDTimer;
+    protected float angle;
+
+    // Prefabs
+    public Bullet bulletPrefab;
 
     public bool Reloading {
         get => reloading;
@@ -40,6 +48,12 @@ public class Weapon : MonoBehaviour
 
         // Get parent player.
         player = transform.parent.GetComponent<Player>();
+
+        // Get muzzle marker.
+        muzzleMarker = GetComponentInChildren<MuzzleMarker>();
+        if(muzzleMarker == null) {
+            Debug.LogError("Muzzle marker not set.");
+        }
 
         // Register self to player.
         player.RegisterWeapon(this);
@@ -91,6 +105,7 @@ public class Weapon : MonoBehaviour
         Debug.Log("Firing.");
         fireCDTimer = rateOfFire;
         ammoCount --;
+        BulletCreate();
     }
 
     void FireCheck() {
@@ -98,6 +113,12 @@ public class Weapon : MonoBehaviour
             Fire();
         if(fireCDTimer > 0)
             fireCDTimer -= Time.deltaTime;
+    }
+
+    void BulletCreate() {
+        Bullet inst = Instantiate(bulletPrefab);
+        inst.transform.position = muzzleMarker.transform.position;
+        inst.Init(bulletSize, bulletSpeed, bulletTTL, transform.TransformDirection(Vector2.right * transform.localScale.x));
     }
 
     // Update is called once per frame
@@ -115,7 +136,7 @@ public class Weapon : MonoBehaviour
 
         // Caculate the current transform.
 
-        float angle = Vector2.SignedAngle(Vector2.right * Mathf.Sign(mousePos.x), mousePos);
+        angle = Vector2.SignedAngle(Vector2.right * Mathf.Sign(mousePos.x), mousePos);
         transform.eulerAngles = Vector3.forward * angle;
     }
 }

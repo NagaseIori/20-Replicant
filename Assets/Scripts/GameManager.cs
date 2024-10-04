@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    public static readonly double PixelsPerUnit = 100;
+
     private static GameManager instance;
 
     public static GameManager Instance
@@ -53,7 +55,8 @@ public class GameManager : MonoBehaviour
 
     /// Utils Functions
     
-    public static Vector2 GetMouseWorldPosition() {
+    public static Vector2 GetMouseWorldPosition()
+    {
         return Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
     public static Vector2 GetMouseLocalPosition(Transform trans)
@@ -61,5 +64,9 @@ public class GameManager : MonoBehaviour
         var worldPos = GetMouseWorldPosition();
         var worldPos3 = new Vector3(worldPos.x, worldPos.y, trans.position.z);
         return trans.InverseTransformPoint(worldPos3);
+    }
+    public static double PixelToUnit(double pixels)
+    {
+        return pixels / PixelsPerUnit;
     }
 }
