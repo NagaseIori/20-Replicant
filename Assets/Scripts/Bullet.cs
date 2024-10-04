@@ -46,7 +46,6 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         // TTL check.
         ttl -= Time.deltaTime;
         if(ttl < 0)

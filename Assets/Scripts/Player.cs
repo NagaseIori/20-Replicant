@@ -70,6 +70,12 @@ public class Player : MonoBehaviour
     }
 
     public void RegisterWeapon(Weapon weapon) {
+        if(currentWeapon != null)
+        {
+            Destroy(currentWeapon.gameObject);
+            Debug.Log("Weapon destroyed.");
+        }
+
         currentWeapon = weapon;
 
         Debug.Log("Weapon registered.");

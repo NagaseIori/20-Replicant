@@ -53,6 +53,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// Player Functions
+    public static Player GetPlayer() {
+        return FindObjectOfType<Player>();
+    }
+    public static Vector2 GetPlayerPosition() {
+        return GetPlayer().transform.position;
+    }
+
     /// Utils Functions
     
     public static Vector2 GetMouseWorldPosition()
