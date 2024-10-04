@@ -13,13 +13,17 @@ public class Bullet : MonoBehaviour
     protected double size = 1;      // in pxs
     protected double speed = 1;
     protected double ttl = 1;       // in seconds
+    protected double damage = 40;
+    protected double knockback = 3;
     protected Vector2 direction;
 
-    public void Init(double size, double speed, double ttl, Vector2 direction)
+    public void Init(double size, double speed, double ttl, double damage, double knockback, Vector2 direction)
     {
         this.size = size;
         this.speed = speed;
         this.ttl = ttl;
+        this.damage = damage;
+        this.knockback = knockback;
         this.direction = direction;
 
         // Rotate the sprite.
@@ -50,5 +54,16 @@ public class Bullet : MonoBehaviour
         ttl -= Time.deltaTime;
         if(ttl < 0)
             Destroy(gameObject);    // Destroy self.
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("Hit detect.");
+        if(other.gameObject.CompareTag("Enemy")) {
+            Debug.Log("Hit enemy.");
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
+            enemy.HitBullet(damage, (float)knockback, rb.velocity.normalized);
+            ttl = 0;
+        }
     }
 }

@@ -144,12 +144,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rateOfFire: 0.2
-  timeToReload: 2
+  timeToReload: 1
   magazineSize: 10
   bulletSpeed: 7.5
   bulletDamage: 20
-  bulletSize: 2.75
-  bulletTTL: 0.4
+  bulletKnockback: 1
+  bulletSize: 8
+  bulletTTL: 2
   bulletPrefab: {fileID: 1448327631631079817, guid: e07ceb4acbdd6064fa666895bc690bb6, type: 3}
 --- !u!95 &2490535860684729343
 Animator:

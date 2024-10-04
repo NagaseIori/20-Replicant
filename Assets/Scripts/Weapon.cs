@@ -20,9 +20,10 @@ public class Weapon : MonoBehaviour
     public double rateOfFire = 0.2;         // in seconds
     public double timeToReload = 2;         // in seconds
     public int magazineSize = 10;   
-    public double bulletSpeed = 20;       // ups
-    public double bulletDamage = 20;    
-    public double bulletSize = 1;        // in px
+    public double bulletSpeed = 20;         // ups
+    public double bulletDamage = 20;
+    public double bulletKnockback = 3;
+    public double bulletSize = 1;           // in px
     public double bulletTTL = 1;            // in seconds
     
     // Weapon states
@@ -118,7 +119,8 @@ public class Weapon : MonoBehaviour
     void BulletCreate() {
         Bullet inst = Instantiate(bulletPrefab);
         inst.transform.position = muzzleMarker.transform.position;
-        inst.Init(bulletSize, bulletSpeed, bulletTTL, transform.TransformDirection(Vector2.right * transform.localScale.x));
+        inst.Init(bulletSize, bulletSpeed, bulletTTL, bulletDamage, bulletKnockback, 
+            transform.TransformDirection(Vector2.right * transform.localScale.x));
     }
 
     // Update is called once per frame
