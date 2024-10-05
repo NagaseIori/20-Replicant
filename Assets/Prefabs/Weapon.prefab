@@ -151,6 +151,7 @@ MonoBehaviour:
   bulletKnockback: 1
   bulletSize: 8
   bulletTTL: 2
+  piercing: 0
   bulletPrefab: {fileID: 1448327631631079817, guid: e07ceb4acbdd6064fa666895bc690bb6, type: 3}
 --- !u!95 &2490535860684729343
 Animator:

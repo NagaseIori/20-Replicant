@@ -16,6 +16,9 @@ public class Bullet : MonoBehaviour
     protected double damage = 40;
     protected double knockback = 3;
     protected Vector2 direction;
+    
+    // Special property
+    public bool goThrough = false;
 
     public void Init(double size, double speed, double ttl, double damage, double knockback, Vector2 direction)
     {
@@ -63,7 +66,9 @@ public class Bullet : MonoBehaviour
             Debug.Log("Hit enemy.");
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
             enemy.HitBullet(damage, (float)knockback, rb.velocity.normalized);
-            ttl = 0;
+
+            if(!goThrough)
+                ttl = 0;
         }
     }
 }

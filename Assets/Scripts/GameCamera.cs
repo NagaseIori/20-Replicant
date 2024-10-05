@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameCamera : MonoBehaviour
 {
+    public float poiShift = 0.02f;          // Lerp value between player and mouse
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +16,7 @@ public class GameCamera : MonoBehaviour
     void Update()
     {
         // Get the poi.
-        var POI = Vector2.Lerp(GameManager.GetPlayerPosition(), GameManager.GetMouseWorldPosition(), 0.05f);
+        var POI = Vector2.Lerp(GameManager.GetPlayerPosition(), GameManager.GetMouseWorldPosition(), poiShift);
 
         // Set camera's position.
         var npos = transform.position;

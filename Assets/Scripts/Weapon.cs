@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour
     public double bulletKnockback = 3;
     public double bulletSize = 1;           // in px
     public double bulletTTL = 1;            // in seconds
+    public bool piercing = false;
     
     // Weapon states
     protected int ammoCount;
@@ -121,6 +122,7 @@ public class Weapon : MonoBehaviour
         inst.transform.position = muzzleMarker.transform.position;
         inst.Init(bulletSize, bulletSpeed, bulletTTL, bulletDamage, bulletKnockback, 
             transform.TransformDirection(Vector2.right * transform.localScale.x));
+        inst.goThrough = piercing;
     }
 
     // Update is called once per frame
