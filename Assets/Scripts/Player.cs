@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour
             AbbyStop();
             return;
         }
-        if(!specialAbby && Input.GetAxisRaw("Fire2") > 0)
+        if(!specialAbby && Input.GetMouseButtonDown(1))
             AbbyGo();
     }
 
