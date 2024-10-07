@@ -15,16 +15,19 @@ public class Player : MonoBehaviour
 
     // Player basic data
     public int healthMax = 100;
+    public double abbyROFSpeed = 0.8;
     public float damagedKnockback = 4;
     public Color damagedBlinkColor = Color.white;
 
     // Player current states
     protected bool triggering = false;
+    protected bool specialAbby = false;
     protected Weapon currentWeapon = null;
     protected int healthPoint;
 
     // Accessor
-    public bool Triggering { get => triggering; }
+    public bool Triggering { get => triggering || specialAbby; }
+    public bool Abbying { get => specialAbby; }
 
     // Events
     public delegate void onPlayerDamaged(Vector2 playerPosition, float knockback);
@@ -57,6 +60,24 @@ public class Player : MonoBehaviour
         healthPoint = healthMax;
     }
 
+    // Abby stuff.
+    void AbbyGo() {
+        specialAbby = true;
+        currentWeapon.Invisiblize();
+    }
+    void AbbyStop() {
+        specialAbby = false;
+        currentWeapon.Visiblize();
+    }
+    void AbbyCheck() {
+        if(currentWeapon.NoAmmo) {
+            AbbyStop();
+            return;
+        }
+        if(!specialAbby && Input.GetAxisRaw("Fire2") > 0)
+            AbbyGo();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -65,6 +86,7 @@ public class Player : MonoBehaviour
         float hAxis = Input.GetAxisRaw("Horizontal");
         float vAxis = Input.GetAxisRaw("Vertical");
         triggering = Input.GetAxisRaw("Fire1") > 0;
+        AbbyCheck();
 
         // Walking judge
 
@@ -75,7 +97,9 @@ public class Player : MonoBehaviour
 
         // Animation Control
         
-        if(hAxis != 0 || vAxis != 0)
+        if(Abbying)
+            animator.Play("PlayerAbbySpecial");
+        else if(hAxis != 0 || vAxis != 0)
         {
             if (isWalking) animator.Play("PlayerWalk");
             else animator.Play("PlayerRun");
@@ -84,6 +108,7 @@ public class Player : MonoBehaviour
         {
             animator.Play("PlayerIdle");
         }
+
 
         // Sprite Flip Control
         
@@ -108,6 +133,7 @@ public class Player : MonoBehaviour
     // Player gets damaged.
     public void Damage(int damage) {
         healthPoint -= damage;
+        AbbyStop();     // Abby interrupt.
         TriggerFlash();
         if(healthPoint == 0) {
             // Gameover.

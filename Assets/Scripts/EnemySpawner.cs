@@ -1,8 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public class EnemyWithProbability {
+    public Enemy enemyPrefab;
+    [Range(0, 1)]
+    public double probability = 1.0;
+}
 
 public class EnemySpawner : MonoBehaviour
 {
-    public Enemy enemyPrefab;
+    public List<EnemyWithProbability> enemyWithProbabilities;
     public double enemySpawnDelay = 1;     // Delay between enemies' spawning.
     protected double enemySpawnTimer = 0;
 
@@ -52,7 +60,12 @@ public class EnemySpawner : MonoBehaviour
                 break;
         }
 
-        var inst = Instantiate(enemyPrefab);
-        inst.transform.position = spawnPosition;
+        foreach(var enemyPair in enemyWithProbabilities) {
+            // Probability test.
+            if(Random.Range(0, 1) <= enemyPair.probability) {
+                var inst = Instantiate(enemyPair.enemyPrefab);
+                inst.transform.position = spawnPosition;
+            }
+        }
     }
 }

@@ -42,6 +42,9 @@ public class Weapon : MonoBehaviour
     public bool Shooting {
         get => !reloading && player.Triggering;
     }
+    public bool NoAmmo {
+        get => ammoCount == 0;
+    }
 
     void Awake()
     {
@@ -104,8 +107,10 @@ public class Weapon : MonoBehaviour
     }
 
     void Fire() {
-        Debug.Log("Firing.");
         fireCDTimer = rateOfFire;
+        if(player.Abbying) {
+            fireCDTimer *= player.abbyROFSpeed;
+        }
         ammoCount --;
         BulletCreate();
     }
@@ -134,6 +139,10 @@ public class Weapon : MonoBehaviour
         // Get the current facing direction.
         
         var mousePos = GameManager.GetMouseLocalPosition(transform.parent);     // Get mouse position of player's coordinate.
+        if(player.Abbying) {
+            // Randomize mousePos.
+            mousePos = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        }
         Vector3 newScale = Vector3.one;
         newScale.x *= Mathf.Sign(mousePos.x);
         transform.localScale = newScale;
@@ -142,5 +151,12 @@ public class Weapon : MonoBehaviour
 
         angle = Vector2.SignedAngle(Vector2.right * Mathf.Sign(mousePos.x), mousePos);
         transform.eulerAngles = Vector3.forward * angle;
+    }
+
+    public void Invisiblize() {
+        sprite.enabled = false;
+    }
+    public void Visiblize() {
+        sprite.enabled = true;
     }
 }
