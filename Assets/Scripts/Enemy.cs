@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -33,6 +34,22 @@ public class Enemy : MonoBehaviour
 
         // State init.
         health = maxHealth;
+
+        // Events registration.
+        Player player = GameManager.GetPlayer();
+        if(player != null) {
+            player.PlayerDamaged += OnPlayerDamaged;
+        }
+        else {
+            Debug.LogWarning("Player not found.");
+        }
+    }
+
+    void OnDestroy()
+    {
+        Player player = GameManager.GetPlayer();
+        if(player != null)
+            player.PlayerDamaged -= OnPlayerDamaged;
     }
 
     public void TriggerFlash() {
@@ -49,7 +66,11 @@ public class Enemy : MonoBehaviour
     {
         // Get direction.
         var direction = -((Vector2)transform.position - GameManager.GetPlayerPosition()).normalized;
+        if(!GameManager.IsPlayerAlive())
+            direction *= -1;
+        
         var targetVelocity = direction * targetSpeed;
+
 
         if((targetVelocity - rb.velocity).magnitude < 0.01f) {
             // Constant motion.
@@ -82,5 +103,10 @@ public class Enemy : MonoBehaviour
         // Apply knockback force.
         rb.AddForce(direction.normalized * knockback, ForceMode2D.Impulse);
         TriggerFlash();
+    }
+
+    public void OnPlayerDamaged(Vector2 playerPosition, float knockback) {
+        Vector2 dir = (Vector2)transform.position - playerPosition;
+        rb.AddForce(knockback * Mathf.Min(1, 1 / dir.magnitude) * dir.normalized, ForceMode2D.Impulse);
     }
 }

@@ -58,7 +58,12 @@ public class GameManager : MonoBehaviour
         return FindObjectOfType<Player>();
     }
     public static Vector2 GetPlayerPosition() {
+        var player = GetPlayer();
+        if(player == null) return Camera.main.transform.position;
         return GetPlayer().transform.position;
+    }
+    public static bool IsPlayerAlive() {
+        return GetPlayer() != null;
     }
 
     /// Utils Functions

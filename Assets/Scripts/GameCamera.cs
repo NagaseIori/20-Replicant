@@ -15,13 +15,16 @@ public class GameCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Get the poi.
-        var POI = Vector2.Lerp(GameManager.GetPlayerPosition(), GameManager.GetMouseWorldPosition(), poiShift);
 
-        // Set camera's position.
-        var npos = transform.position;
-        npos.x = POI.x;
-        npos.y = POI.y;
-        transform.position = npos;
+        if(GameManager.GetPlayer() != null) {
+            // Get the poi.
+            var POI = Vector2.Lerp(GameManager.GetPlayerPosition(), GameManager.GetMouseWorldPosition(), poiShift);
+
+            // Set camera's position.
+            var npos = transform.position;
+            npos.x = POI.x;
+            npos.y = POI.y;
+            transform.position = npos;
+        }
     }
 }

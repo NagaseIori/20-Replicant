@@ -10,10 +10,13 @@ public class Player : MonoBehaviour
     // Components
     private Rigidbody2D body;
     private Animator animator;
-    private SpriteRenderer sprRenderer;
+    private SpriteRenderer sprite;
+    public float flashDuration = 1f;
 
     // Player basic data
-    protected readonly int healthMax = 4;
+    public int healthMax = 100;
+    public float damagedKnockback = 4;
+    public Color damagedBlinkColor = Color.white;
 
     // Player current states
     protected bool triggering = false;
@@ -23,11 +26,32 @@ public class Player : MonoBehaviour
     // Accessor
     public bool Triggering { get => triggering; }
 
+    // Events
+    public delegate void onPlayerDamaged(Vector2 playerPosition, float knockback);
+    public event onPlayerDamaged PlayerDamaged;
+
+    // Materials
+    private Material blinkMaterial;
+    private Material originalMaterial;
+
+    public void TriggerFlash() {
+        StartCoroutine(FlashCoroutine());
+    }
+
+    private IEnumerator FlashCoroutine() {
+        sprite.material = blinkMaterial;
+        yield return new WaitForSeconds(flashDuration);
+        sprite.material = originalMaterial;
+    }
+
     void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        sprRenderer = GetComponent<SpriteRenderer>();
+        sprite = GetComponent<SpriteRenderer>();
+        blinkMaterial = new Material(Shader.Find("Custom/Sprites/Colorized"));
+        blinkMaterial.color = damagedBlinkColor;
+        originalMaterial = sprite.material;
 
         // Init player's states
         healthPoint = healthMax;
@@ -65,7 +89,7 @@ public class Player : MonoBehaviour
         
         if(hAxis != 0)
         {
-            sprRenderer.flipX = hAxis < 0;
+            sprite.flipX = hAxis < 0;
         }
     }
 
@@ -79,5 +103,30 @@ public class Player : MonoBehaviour
         currentWeapon = weapon;
 
         Debug.Log("Weapon registered.");
+    }
+
+    // Player gets damaged.
+    public void Damage(int damage) {
+        healthPoint -= damage;
+        TriggerFlash();
+        if(healthPoint == 0) {
+            // Gameover.
+            Destroy(gameObject);
+        }
+        else {
+            PlayerDamaged(transform.position, damagedKnockback);
+        }
+    }
+
+    // Player gets hit.
+    public void Hit() {
+        Damage(1);
+    }
+
+    // Collisons methods
+    private void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.CompareTag("Enemy")) {
+            Hit();
+        }
     }
 }
