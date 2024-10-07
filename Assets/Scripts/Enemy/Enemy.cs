@@ -62,7 +62,7 @@ public class Enemy : MonoBehaviour
         sprite.material = originalMaterial;
     }
 
-    void Update()
+    public virtual void Update()
     {
         // Get direction.
         var direction = -((Vector2)transform.position - GameManager.GetPlayerPosition()).normalized;
@@ -70,7 +70,6 @@ public class Enemy : MonoBehaviour
             direction *= -1;
         
         var targetVelocity = direction * targetSpeed;
-
 
         if((targetVelocity - rb.velocity).magnitude < 0.01f) {
             // Constant motion.
@@ -97,8 +96,8 @@ public class Enemy : MonoBehaviour
             Death();
     }
 
-    // Hit by bullet.
-    public void HitBullet(double damage, float knockback, Vector2 direction) {
+    // Enemy get hit.
+    public void Hit(double damage, float knockback, Vector2 direction) {
         Damage(damage);
         // Apply knockback force.
         rb.AddForce(direction.normalized * knockback, ForceMode2D.Impulse);

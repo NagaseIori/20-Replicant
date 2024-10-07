@@ -22,12 +22,21 @@ public class EnemySpawner : MonoBehaviour
 
         enemySpawnTimer += Time.deltaTime;
         if(enemySpawnTimer > enemySpawnDelay) {
-            SpawnEnemyOutsideView();
+            SpawnEnemies();
             enemySpawnTimer = 0;
         }
     }
 
-    void SpawnEnemyOutsideView()
+    void SpawnEnemies() {
+        foreach(var enemyPair in enemyWithProbabilities) {
+            // Probability test.
+            if(Random.Range(0f, 1f) <= enemyPair.probability) {
+                SpawnEnemyOutsideView(enemyPair.enemyPrefab);
+            }
+        }
+    }
+
+    void SpawnEnemyOutsideView(Enemy enemyPrefab)
     {
         Camera camera = Camera.main;
 
@@ -59,13 +68,7 @@ public class EnemySpawner : MonoBehaviour
                 spawnPosition = new Vector3(Random.Range(leftBound, rightBound), bottomBound - offset, 0);
                 break;
         }
-
-        foreach(var enemyPair in enemyWithProbabilities) {
-            // Probability test.
-            if(Random.Range(0, 1) <= enemyPair.probability) {
-                var inst = Instantiate(enemyPair.enemyPrefab);
-                inst.transform.position = spawnPosition;
-            }
-        }
+        var inst = Instantiate(enemyPrefab);
+        inst.transform.position = spawnPosition;
     }
 }

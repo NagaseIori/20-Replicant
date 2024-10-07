@@ -65,7 +65,7 @@ public class Bullet : MonoBehaviour
         if(other.gameObject.CompareTag("Enemy")) {
             Debug.Log("Hit enemy.");
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
-            enemy.HitBullet(damage, (float)knockback, rb.velocity.normalized);
+            enemy.Hit(damage, (float)knockback, rb.velocity.normalized);
 
             if(!goThrough)
                 ttl = 0;
